@@ -1,4 +1,4 @@
-main.pyimport asyncio
+import asyncio
 import logging
 from aiogram import Bot, Dispatcher, F, types
 from aiogram.filters import CommandStart
@@ -17,13 +17,11 @@ async def start_cmd(message: types.Message):
         "и оператор ответит вам в ближайшее время."
     )
 
-# 1. Пересылка сообщения от клиента админу
 @dp.message(F.chat.id != ADMIN_ID)
 async def forward_to_admin(message: types.Message):
     await message.forward(chat_id=ADMIN_ID)
     await message.reply("✅ Сообщение доставлено оператору! Ожидайте ответа.")
 
-# 2. Отправка ответа от админа клиенту
 @dp.message(F.chat.id == ADMIN_ID)
 async def reply_to_user(message: types.Message):
     if message.reply_to_message and message.reply_to_message.forward_from:
@@ -34,7 +32,7 @@ async def reply_to_user(message: types.Message):
         except Exception as e:
             await message.reply(f"❌ Ошибка отправки: {e}")
     else:
-        await message.reply("⚠️ Нажмите **«Ответить» (Reply)** на пересланное сообщение клиента!")
+        await message.reply("⚠️ Нажмите «Ответить» (Reply) на пересланное сообщение клиента!")
 
 async def main():
     logging.basicConfig(level=logging.INFO)
